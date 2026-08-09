@@ -12,6 +12,7 @@ object JustIcons {
     val VARIABLE_ICON = AllIcons.Nodes.Variable
     val SET_ICON = AllIcons.General.Settings
     val MOD_ICON = AllIcons.Nodes.Module
+    val GROUP_ICON = AllIcons.Nodes.Folder
     var EXPORT_ICON = AllIcons.Nodes.Gvariable
     var IMPORT_ICON = AllIcons.ToolbarDecorator.Import
     var Bash: Icon = IconLoader.findIcon("/icons/bash.png", JustIcons::class.java.classLoader)!!
