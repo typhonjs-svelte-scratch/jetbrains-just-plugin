@@ -109,12 +109,16 @@ class JustfileService(
                         }
                     }
                     ?: emptyList()
+            val attributes = recipeJson.jsonObject["attributes"]?.jsonArray?.mapNotNull {
+                it
+            }?: emptyList()
             RecipeNode(
                 project = project,
                 file = justVirtualFile,
                 recipe = name,
                 description = description,
                 params = params,
+                attributes = attributes
             )
         }.sortedBy { it.recipe }
     }
