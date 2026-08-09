@@ -1,7 +1,9 @@
 package org.mvnsearch.plugins.just.ide.toolwindow
 
+import kotlinx.serialization.json.JsonElement
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import kotlinx.serialization.json.jsonObject
 import org.mvnsearch.plugins.just.ide.icons.JustIcons
 import javax.swing.Icon
 
@@ -37,7 +39,13 @@ data class RecipeNode(
     val description: String?,
     override val id: String = "${file.url}::$recipe",
     val params: List<String> = emptyList(),
-    ) : JustTreeNode(project, id) {
+    val attributes: List<JsonElement> = emptyList()
+) : JustTreeNode(project, id) {
     override val name = recipe
     override val icon = JustIcons.RUN_ICON
+
+    fun getGroup(): String? {
+        val groupElement = this.attributes.find { it.jsonObject.containsKey("group") }
+        return groupElement?.jsonObject?.get("group")?.toString()
+    }
 }
