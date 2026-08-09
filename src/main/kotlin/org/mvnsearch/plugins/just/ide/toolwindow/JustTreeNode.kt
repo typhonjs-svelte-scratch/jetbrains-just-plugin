@@ -3,6 +3,8 @@ package org.mvnsearch.plugins.just.ide.toolwindow
 import kotlinx.serialization.json.JsonElement
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
 import org.mvnsearch.plugins.just.ide.icons.JustIcons
 import javax.swing.Icon
@@ -32,6 +34,16 @@ data class JustfileNode(
     override val icon = JustIcons.JUST_FILE
 }
 
+data class GroupNode(
+    override val project: Project,
+    val file: VirtualFile,
+    val group: String,
+    override val id: String = "${file.url}::group::$group",
+) : JustTreeNode(project, id) {
+    override val name = group
+    override val icon = JustIcons.GROUP_ICON
+}
+
 data class RecipeNode(
     override val project: Project,
     val file: VirtualFile,
@@ -46,6 +58,7 @@ data class RecipeNode(
 
     fun getGroup(): String? {
         val groupElement = this.attributes.find { it.jsonObject.containsKey("group") }
-        return groupElement?.jsonObject?.get("group")?.toString()
+        val group = groupElement?.jsonObject?.get("group") as? JsonPrimitive
+        return group?.contentOrNull?.takeIf { it.isNotBlank() }
     }
 }

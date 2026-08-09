@@ -28,7 +28,18 @@ class JustTreeStructure(
                 }.sortedBy { it.file.path }.toTypedArray()
             }
 
-            is JustfileNode -> justService.loadRecipes(element.file).toTypedArray()
+            is JustfileNode -> {
+                val recipes = justService.loadRecipes(element.file)
+                val groups = recipes.mapNotNull { it.getGroup() }.distinct().sorted().map {
+                    GroupNode(project = project, file = element.file, group = it)
+                }
+
+                (groups + recipes.filter { it.getGroup() == null }).toTypedArray()
+            }
+
+            is GroupNode -> justService.loadRecipes(element.file).filter {
+                it.getGroup() == element.group
+            }.toTypedArray()
 
             else -> emptyArray()
         }
@@ -36,7 +47,10 @@ class JustTreeStructure(
 
     override fun getParentElement(element: Any): Any? = when (element) {
         is JustfileNode -> root
-        is RecipeNode -> JustfileNode(project, element.file, null)
+        is GroupNode -> JustfileNode(project, element.file, null)
+        is RecipeNode -> element.getGroup()?.let { GroupNode(project, element.file, it) }
+            ?: JustfileNode(project, element.file, null)
+
         else -> null
     }
 
