@@ -4,6 +4,12 @@
 
 ## Unreleased
 
+## 0.6.55 - 2026-08-09
+
+### Added
+
+- Add group node for recipes in Just toolwindow
+
 ## 0.6.54 - 2026-07-29
 
 ### Added
