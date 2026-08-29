@@ -3,6 +3,7 @@ package org.mvnsearch.plugins.just.ide.toolwindow
 import kotlinx.serialization.json.JsonElement
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
@@ -57,7 +58,7 @@ data class RecipeNode(
     override val icon = JustIcons.RUN_ICON
 
     fun getGroup(): String? {
-        val groupElement = this.attributes.find { it.jsonObject.containsKey("group") }
+        val groupElement = this.attributes.find { it is JsonObject && it.jsonObject.containsKey("group") }
         val group = groupElement?.jsonObject?.get("group") as? JsonPrimitive
         return group?.contentOrNull?.takeIf { it.isNotBlank() }
     }
